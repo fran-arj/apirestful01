@@ -1,7 +1,8 @@
 const express = require('express');
-//const { Router } = express;
 const app = express();
 const PORT = 8080;
+
+app.use(express.static('public'));
 
 const server = app.listen(PORT, () => {
   console.log('Servidor levantado en el puerto: ' + server.address().port);
@@ -27,9 +28,12 @@ let productos = [
 const nextID = () => {
   const ids = productos.map((e) => e.Id);
   const maxID = ids.length > 0 ? Math.max(...ids) + 1 : 1;
-  //const maxID = productos.length > 0 ? productos.length + 1 : 1;
   return maxID;
 };
+
+routerProductos.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
 
 routerProductos.get('/productos', (req, res) => {
   res.json(productos);
@@ -45,6 +49,7 @@ routerProductos.get('/productos/:id', (req, res) => {
 });
 
 routerProductos.post('/productos', (req, res) => {
+  console.log('formulario', req.body);
   const newID = nextID();
   const newProduct = { Id: newID, ...req.body };
   productos.push(newProduct);
