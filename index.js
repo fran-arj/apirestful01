@@ -15,15 +15,7 @@ const routerProductos = express.Router();
 routerProductos.use(express.urlencoded({ extended: true }));
 routerProductos.use(express.json());
 
-let productos = [
-  {
-    Id: 1,
-    title: 'PC',
-    price: 1250,
-    thumbnail:
-      'https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcRpDp8UndVwMQ2BH97xSmdNxv7HAp5VCqyBphqq-OpVswSMHnhCz3f7LUl1e9_EGFloBo_QG0noF4w&usqp=CAc',
-  },
-];
+let productos = [];
 
 const nextID = () => {
   const ids = productos.map((e) => e.Id);
@@ -49,7 +41,6 @@ routerProductos.get('/productos/:id', (req, res) => {
 });
 
 routerProductos.post('/productos', (req, res) => {
-  console.log('formulario', req.body);
   const newID = nextID();
   const newProduct = { Id: newID, ...req.body };
   productos.push(newProduct);
@@ -57,7 +48,10 @@ routerProductos.post('/productos', (req, res) => {
 });
 
 routerProductos.put('/productos/:id', (req, res) => {
-  console.log('put productos ID');
+  productos = productos.map((p) =>
+    p.Id == req.params.id ? { Id: p.Id, ...req.body } : p
+  );
+  res.json({ mensaje: `se actualizo producto ${req.params.id} correctamente` });
 });
 
 routerProductos.delete('/productos/:id', (req, res) => {
