@@ -36,7 +36,12 @@ routerProductos.get('/productos', (req, res) => {
 });
 
 routerProductos.get('/productos/:id', (req, res) => {
-  console.log('get productos ID');
+  const contenidoID = productos.find((e) => e.Id == req.params.id);
+  if (typeof contenidoID === 'object') {
+    res.json(contenidoID);
+  } else {
+    res.json({ mensaje: `Producto Id: ${req.params.id} no encontrado` });
+  }
 });
 
 routerProductos.post('/productos', (req, res) => {
